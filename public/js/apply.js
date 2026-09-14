@@ -3,7 +3,7 @@
 // ============================================================
 
 let currentStep = 1;
-const totalSteps = 7;
+const totalSteps = 6;
 
 document.addEventListener("DOMContentLoaded", function () {
   loadDistricts();
@@ -219,14 +219,7 @@ function validateStep(step) {
     }
   }
 
-  if (step === 3) {
-    const h = parseInt(val("height_cm"));
-    if (!h || h < 140 || h > 250) { showError("err_height", true); valid = false; } else showError("err_height", false);
-    const w = parseInt(val("weight_kg"));
-    if (!w || w < 40 || w > 200) { showError("err_weight", true); valid = false; } else showError("err_weight", false);
-  }
-
-  if (step === 6) {
+  if (step === 5) {
     if (!document.getElementById("passport_photo").files.length) {
       showError("err_passport", true); valid = false;
     } else showError("err_passport", false);
@@ -235,7 +228,7 @@ function validateStep(step) {
     } else showError("err_nid_doc", false);
   }
 
-  if (step === 7) {
+  if (step === 6) {
     if (!document.getElementById("declaration_accepted").checked) {
       showError("err_declaration", true); valid = false;
     } else showError("err_declaration", false);
@@ -265,7 +258,6 @@ function buildSummary() {
       <div><strong>Phone:</strong> ${val("phone")}</div>
       <div><strong>Email:</strong> ${val("email") || "Not provided"}</div>
       <div><strong>Category:</strong> ${category}${proCategory ? " - " + proCategory : ""}</div>
-      <div><strong>Height:</strong> ${val("height_cm")} cm</div>
     </div>
     <div style="margin-top:10px;padding:10px;background:white;border-radius:6px;border:1px solid var(--border)">
       <strong>Documents:</strong>
@@ -279,7 +271,7 @@ function buildSummary() {
 }
 
 function submitApplication() {
-  if (!validateStep(7)) return;
+  if (!validateStep(6)) return;
 
   const btnNext = document.getElementById("btnNext");
   btnNext.disabled = true;
@@ -289,18 +281,6 @@ function submitApplication() {
 
   const category = document.querySelector('input[name="recruitment_category"]:checked')?.value;
   if (category) formData.set("recruitment_category", category);
-
-  const disability = document.querySelector('input[name="has_disability"]:checked')?.value;
-  if (disability) formData.set("has_disability", disability);
-
-  const medical = document.querySelector('input[name="has_medical_condition"]:checked')?.value;
-  if (medical) formData.set("has_medical_condition", medical);
-
-  const criminal = document.querySelector('input[name="has_criminal_record"]:checked')?.value;
-  if (criminal) formData.set("has_criminal_record", criminal);
-
-  const dismissed = document.querySelector('input[name="previously_dismissed"]:checked')?.value;
-  if (dismissed) formData.set("previously_dismissed", dismissed);
 
   fetch("/apply/submit", {
     method: "POST",

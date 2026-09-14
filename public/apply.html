@@ -31,7 +31,6 @@
     <div class="progress-bar" id="progressBar">
       <div class="progress-step active">Personal</div>
       <div class="progress-step">Contact</div>
-      <div class="progress-step">Physical</div>
       <div class="progress-step">Category</div>
       <div class="progress-step">Education</div>
       <div class="progress-step">Documents</div>
@@ -191,108 +190,10 @@
       </div>
     </div>
 
-    <!-- STEP 3: Physical Details -->
+    <!-- STEP 3: Recruitment Category -->
     <div class="form-step" id="step3">
       <div class="form-card">
-        <div class="form-card-header"><h3>Step 3: Physical Details &amp; Health</h3></div>
-        <div class="form-card-body">
-          <div class="alert-banner" style="margin-bottom:20px;"><div><strong>Note:</strong> Minimum height is 158cm for males and 150cm for females. Final medical examination will be conducted at the recruitment center.</div></div>
-          <div class="form-row cols-3">
-            <div class="form-group">
-              <label class="form-label">Height (cm) <span class="req">*</span></label>
-              <input type="number" class="form-control" id="height_cm" name="height_cm" placeholder="e.g. 175" min="140" max="250" required>
-              <span class="form-error" id="err_height">Please enter valid height (140-250 cm).</span>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Weight (kg) <span class="req">*</span></label>
-              <input type="number" class="form-control" id="weight_kg" name="weight_kg" placeholder="e.g. 70" min="40" max="200" required>
-              <span class="form-error" id="err_weight">Please enter valid weight.</span>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Chest (cm)</label>
-              <input type="number" class="form-control" id="chest_cm" name="chest_cm" placeholder="e.g. 85" min="60" max="150">
-            </div>
-          </div>
-          <div class="form-row cols-3">
-            <div class="form-group">
-              <label class="form-label">Blood Group</label>
-              <select class="form-control" id="blood_group" name="blood_group">
-                <option value="">Unknown/Select</option>
-                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
-                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Eye Color</label>
-              <select class="form-control" id="eye_color" name="eye_color">
-                <option value="">Select</option><option>Brown</option><option>Dark Brown</option><option>Black</option><option>Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Hair Color</label>
-              <select class="form-control" id="hair_color" name="hair_color">
-                <option value="">Select</option><option>Black</option><option>Brown</option><option>Grey</option><option>Other</option>
-              </select>
-            </div>
-          </div>
-          <div class="form-row cols-1">
-            <div class="form-group">
-              <label class="form-label">Distinguishing Marks</label>
-              <input type="text" class="form-control" id="distinguishing_marks" name="distinguishing_marks" placeholder="e.g. Scar on left arm, birthmark on right cheek">
-            </div>
-          </div>
-          <div class="form-row cols-1">
-            <div class="form-group">
-              <label class="form-label">Do you have any physical disability? <span class="req">*</span></label>
-              <div class="radio-group">
-                <label class="radio-option"><input type="radio" name="has_disability" value="No" checked onchange="toggleSection('disabilityDetails',this.value==='Yes')"> No</label>
-                <label class="radio-option"><input type="radio" name="has_disability" value="Yes" onchange="toggleSection('disabilityDetails',this.value==='Yes')"> Yes</label>
-              </div>
-            </div>
-          </div>
-          <div id="disabilityDetails" style="display:none">
-            <div class="form-group"><label class="form-label">Describe the disability</label><textarea class="form-control" id="disability_details" name="disability_details" rows="2"></textarea></div>
-          </div>
-        </div>
-      </div>
-      <div class="form-card">
-        <div class="form-card-header"><h3>Health &amp; Background Declarations</h3></div>
-        <div class="form-card-body">
-          <div class="form-group">
-            <label class="form-label">Chronic medical condition? <span class="req">*</span></label>
-            <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="has_medical_condition" value="No" checked onchange="toggleSection('medicalDetails',this.value==='Yes')"> No</label>
-              <label class="radio-option"><input type="radio" name="has_medical_condition" value="Yes" onchange="toggleSection('medicalDetails',this.value==='Yes')"> Yes</label>
-            </div>
-          </div>
-          <div id="medicalDetails" style="display:none;margin-top:12px">
-            <div class="form-group"><label class="form-label">Describe the condition</label><textarea class="form-control" id="medical_details" name="medical_details" rows="2"></textarea></div>
-          </div>
-          <div class="form-group" style="margin-top:15px">
-            <label class="form-label">Criminal record? <span class="req">*</span></label>
-            <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="has_criminal_record" value="No" checked onchange="toggleSection('criminalDetails',this.value==='Yes')"> No</label>
-              <label class="radio-option"><input type="radio" name="has_criminal_record" value="Yes" onchange="toggleSection('criminalDetails',this.value==='Yes')"> Yes</label>
-            </div>
-          </div>
-          <div id="criminalDetails" style="display:none;margin-top:12px">
-            <div class="form-group"><label class="form-label">Provide details</label><textarea class="form-control" id="criminal_details" name="criminal_details" rows="2"></textarea></div>
-          </div>
-          <div class="form-group" style="margin-top:15px">
-            <label class="form-label">Previously dismissed from UPDF/security organisation? <span class="req">*</span></label>
-            <div class="radio-group">
-              <label class="radio-option"><input type="radio" name="previously_dismissed" value="No" checked> No</label>
-              <label class="radio-option"><input type="radio" name="previously_dismissed" value="Yes"> Yes</label>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- STEP 4: Recruitment Category -->
-    <div class="form-step" id="step4">
-      <div class="form-card">
-        <div class="form-card-header"><h3>Step 4: Recruitment Category</h3></div>
+        <div class="form-card-header"><h3>Step 3: Recruitment Category</h3></div>
         <div class="form-card-body">
           <div class="form-group">
             <label class="form-label">Select Recruitment Category <span class="req">*</span></label>
@@ -410,10 +311,10 @@
       </div>
     </div>
 
-    <!-- STEP 5: Education -->
-    <div class="form-step" id="step5">
+    <!-- STEP 4: Education -->
+    <div class="form-step" id="step4">
       <div class="form-card">
-        <div class="form-card-header"><h3>Step 5: Education &amp; Work Experience</h3></div>
+        <div class="form-card-header"><h3>Step 4: Education &amp; Work Experience</h3></div>
         <div class="form-card-body">
           <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">UCE (O-Level)</h4>
           <div class="form-row cols-2">
@@ -469,10 +370,10 @@
       </div>
     </div>
 
-    <!-- STEP 6: Document Uploads -->
-    <div class="form-step" id="step6">
+    <!-- STEP 5: Document Uploads -->
+    <div class="form-step" id="step5">
       <div class="form-card">
-        <div class="form-card-header"><h3>Step 6: Document Uploads</h3></div>
+        <div class="form-card-header"><h3>Step 5: Document Uploads</h3></div>
         <div class="form-card-body">
           <div class="alert-banner" style="margin-bottom:20px;"><div><strong>Instructions:</strong> Upload clear scans/photos. Accepted: JPG, PNG, PDF. Max 5MB per file. Originals required at physical recruitment.</div></div>
           <div class="form-row cols-2">
@@ -507,10 +408,10 @@
       </div>
     </div>
 
-    <!-- STEP 7: Declaration -->
-    <div class="form-step" id="step7">
+    <!-- STEP 6: Declaration -->
+    <div class="form-step" id="step6">
       <div class="form-card">
-        <div class="form-card-header"><h3>Step 7: Declaration &amp; Submission</h3></div>
+        <div class="form-card-header"><h3>Step 6: Declaration &amp; Submission</h3></div>
         <div class="form-card-body">
           <div id="summarySection" style="margin-bottom:24px;padding:20px;background:var(--light-grey);border-radius:var(--radius);border:1px solid var(--border);">
             <h4 style="color:var(--primary-dark);margin-bottom:16px;">Application Summary</h4>
@@ -521,11 +422,9 @@
             I, the applicant, hereby solemnly declare that:<br><br>
             1. I am a citizen of Uganda and all information provided is true, accurate, and complete to the best of my knowledge and belief.<br>
             2. I understand that any false declaration or forged documents is a criminal offence and shall lead to disqualification, arrest, and prosecution.<br>
-            3. I have never been dismissed from any security organisation and have no criminal convictions unless otherwise stated.<br>
-            4. I am physically and medically fit to undergo the military recruitment process.<br>
-            5. I consent to verification of all documents including academic records and criminal background checks.<br>
-            6. I understand shortlisting does not guarantee final selection and the UPDF reserves the right to reject any application.<br>
-            7. I am a resident of the district indicated and have not made any other application in this exercise.
+            3. I consent to verification of all documents including academic records and criminal background checks.<br>
+            4. I understand shortlisting does not guarantee final selection and the UPDF reserves the right to reject any application.<br>
+            5. I am a resident of the district indicated and have not made any other application in this exercise.
           </div>
           <div class="form-group" style="margin-top:16px">
             <label class="checkbox-option" style="align-items:flex-start;gap:12px;">
@@ -534,7 +433,6 @@
             </label>
             <span class="form-error" id="err_declaration">You must accept the declaration to submit.</span>
           </div>
-          <div class="alert-banner alert-danger" style="margin-top:16px"><div><strong>Final Warning:</strong> False information or forged documents will result in criminal prosecution.</div></div>
         </div>
       </div>
     </div>
@@ -544,7 +442,7 @@
   <!-- Navigation Buttons -->
   <div class="form-nav" id="formNav">
     <button type="button" class="btn" id="btnPrev" onclick="prevStep()" style="background:#eee;color:#333;border-color:#ccc;" disabled>Previous</button>
-    <span id="stepIndicator" style="font-size:14px;color:#666;font-weight:600;">Step 1 of 7</span>
+    <span id="stepIndicator" style="font-size:14px;color:#666;font-weight:600;">Step 1 of 6</span>
     <button type="button" class="btn btn-green" id="btnNext" onclick="nextStep()">Next Step</button>
   </div>
 </div>
