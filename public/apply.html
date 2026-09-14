@@ -279,92 +279,46 @@
           </div>
         </div>
       </div>
-      <div class="form-card">
-        <div class="form-card-header"><h3>Local Leadership Information</h3></div>
-        <div class="form-card-body">
-          <p style="margin-bottom:16px;color:#666;font-size:14px;">Provide names of local leaders for your recommendation. Signed letters required at physical recruitment.</p>
-          <div class="form-row cols-2">
-            <div class="form-group">
-              <label class="form-label">LC1 Chairperson Name</label>
-              <input type="text" class="form-control" id="lc1_name" name="lc1_name" placeholder="Village/Cell Chairperson">
-            </div>
-            <div class="form-group">
-              <label class="form-label">LC2 Chairperson Name</label>
-              <input type="text" class="form-control" id="lc2_name" name="lc2_name" placeholder="Parish/Ward Chairperson">
-            </div>
-          </div>
-          <div class="form-row cols-3">
-            <div class="form-group">
-              <label class="form-label">LC3 Chairperson Name</label>
-              <input type="text" class="form-control" id="lc3_name" name="lc3_name" placeholder="Sub-county Chairperson">
-            </div>
-            <div class="form-group">
-              <label class="form-label">GISO / DISO Name</label>
-              <input type="text" class="form-control" id="giso_diso_name" name="giso_diso_name" placeholder="GISO or DISO name">
-            </div>
-            <div class="form-group">
-              <label class="form-label">RDC Name</label>
-              <input type="text" class="form-control" id="rdc_name" name="rdc_name" placeholder="Resident District Commissioner">
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- STEP 4: Education -->
     <div class="form-step" id="step4">
       <div class="form-card">
-        <div class="form-card-header"><h3>Step 4: Education &amp; Work Experience</h3></div>
+        <div class="form-card-header"><h3>Step 4: Education &amp; Qualifications</h3></div>
         <div class="form-card-body">
-          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">UCE (O-Level)</h4>
           <div class="form-row cols-2">
-            <div class="form-group"><label class="form-label">UCE Index Number</label><input type="text" class="form-control" id="uce_index" name="uce_index" placeholder="U0001/001/2015"></div>
-            <div class="form-group"><label class="form-label">Year</label><input type="number" class="form-control" id="uce_year" name="uce_year" placeholder="2015" min="1980" max="2026"></div>
-          </div>
-          <div class="form-row cols-3">
-            <div class="form-group"><label class="form-label">Aggregate Score</label><input type="number" class="form-control" id="uce_aggregate" name="uce_aggregate" placeholder="e.g. 12" min="4" max="36"></div>
-            <div class="form-group"><label class="form-label">Division/Grade</label>
-              <select class="form-control" id="uce_grade" name="uce_grade">
-                <option value="">-- Select --</option><option>Division 1</option><option>Division 2</option><option>Division 3</option><option>Division 4</option><option>Division U</option>
+            <div class="form-group">
+              <label class="form-label">Highest Qualification Obtained <span class="req">*</span></label>
+              <select class="form-control" id="higher_edu_qualification" name="higher_edu_qualification" required>
+                <option value="">-- Select Qualification --</option>
+                <option>O-Level (UCE)</option>
+                <option>A-Level (UACE)</option>
+                <option>Certificate</option>
+                <option>Diploma</option>
+                <option>Bachelor's Degree</option>
+                <option>Postgraduate Diploma</option>
+                <option>Master's Degree</option>
+                <option>PhD / Doctorate</option>
               </select>
             </div>
-            <div class="form-group"><label class="form-label">School Name</label><input type="text" class="form-control" id="uce_school" name="uce_school" placeholder="Secondary school name"></div>
-          </div>
-          <hr style="margin:24px 0">
-          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">UACE (A-Level)</h4>
-          <div class="form-row cols-2">
-            <div class="form-group"><label class="form-label">UACE Index Number</label><input type="text" class="form-control" id="uace_index" name="uace_index" placeholder="U0001/001/2017"></div>
-            <div class="form-group"><label class="form-label">Year</label><input type="number" class="form-control" id="uace_year" name="uace_year" placeholder="2017" min="1982" max="2026"></div>
-          </div>
-          <div class="form-row cols-3">
-            <div class="form-group"><label class="form-label">Points</label><input type="number" class="form-control" id="uace_points" name="uace_points" placeholder="e.g. 15" min="0" max="25"></div>
-            <div class="form-group"><label class="form-label">Grade</label>
-              <select class="form-control" id="uace_grade" name="uace_grade">
-                <option value="">-- Select --</option><option>Grade A (19-25 pts)</option><option>Grade B (15-18 pts)</option><option>Grade C (13-14 pts)</option><option>Grade D (7-12 pts)</option><option>Grade E (2-6 pts)</option>
-              </select>
-            </div>
-            <div class="form-group"><label class="form-label">School Name</label><input type="text" class="form-control" id="uace_school" name="uace_school" placeholder="School/College name"></div>
-          </div>
-          <hr style="margin:24px 0">
-          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">Higher Education (Diploma / Degree / Masters / PhD)</h4>
-          <div class="form-row cols-2">
-            <div class="form-group"><label class="form-label">Institution Name</label><input type="text" class="form-control" id="higher_edu_institution" name="higher_edu_institution" placeholder="e.g. Makerere University"></div>
-            <div class="form-group"><label class="form-label">Qualification</label>
-              <select class="form-control" id="higher_edu_qualification" name="higher_edu_qualification">
-                <option value="">-- Select --</option><option>Certificate</option><option>Diploma</option><option>Bachelor's Degree</option><option>Postgraduate Diploma</option><option>Master's Degree</option><option>PhD / Doctorate</option>
-              </select>
+            <div class="form-group">
+              <label class="form-label">School / Institution Name <span class="req">*</span></label>
+              <input type="text" class="form-control" id="higher_edu_institution" name="higher_edu_institution" placeholder="Name of school or university" required>
             </div>
           </div>
-          <div class="form-row cols-2">
-            <div class="form-group"><label class="form-label">Field of Study</label><input type="text" class="form-control" id="higher_edu_field" name="higher_edu_field" placeholder="e.g. Computer Science, Medicine"></div>
-            <div class="form-group"><label class="form-label">Year of Graduation</label><input type="number" class="form-control" id="higher_edu_year" name="higher_edu_year" placeholder="e.g. 2020" min="1990" max="2026"></div>
-          </div>
-          <hr style="margin:24px 0">
-          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">Work Experience (if applicable)</h4>
           <div class="form-row cols-3">
-            <div class="form-group"><label class="form-label">Current / Last Employer</label><input type="text" class="form-control" id="current_employer" name="current_employer" placeholder="Organisation name"></div>
-            <div class="form-group"><label class="form-label">Position / Title</label><input type="text" class="form-control" id="current_position" name="current_position" placeholder="e.g. Software Developer"></div>
-            <div class="form-group"><label class="form-label">Years of Experience</label><input type="number" class="form-control" id="years_experience" name="years_experience" placeholder="e.g. 3" min="0" max="40"></div>
+            <div class="form-group">
+              <label class="form-label">Field of Study / Course</label>
+              <input type="text" class="form-control" id="higher_edu_field" name="higher_edu_field" placeholder="e.g. General, Computer Science, Nursing">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Year Completed / Graduated <span class="req">*</span></label>
+              <input type="number" class="form-control" id="higher_edu_year" name="higher_edu_year" placeholder="e.g. 2022" min="1980" max="2026" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Grade / Division / Class</label>
+              <input type="text" class="form-control" id="uce_grade" name="uce_grade" placeholder="e.g. Division 1, First Class, Credit">
+            </div>
           </div>
         </div>
       </div>
@@ -375,7 +329,7 @@
       <div class="form-card">
         <div class="form-card-header"><h3>Step 5: Document Uploads</h3></div>
         <div class="form-card-body">
-          <div class="alert-banner" style="margin-bottom:20px;"><div><strong>Instructions:</strong> Upload clear scans/photos. Accepted: JPG, PNG, PDF. Max 5MB per file. Originals required at physical recruitment.</div></div>
+          <div class="alert-banner" style="margin-bottom:20px;"><div><strong>Instructions:</strong> Upload clear scans/photos. Accepted: JPG, PNG, PDF. Max 5MB per file.</div></div>
           <div class="form-row cols-2">
             <div class="form-group">
               <label class="form-label">Passport Size Photograph <span class="req">*</span></label>
@@ -388,20 +342,12 @@
               <span class="form-error" id="err_nid_doc">Please upload your National ID.</span>
             </div>
             <div class="form-group">
-              <label class="form-label">UCE Certificate / Transcript</label>
-              <div class="file-upload-box"><input type="file" id="uce_certificate" name="uce_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_uce')"><p><strong>UCE Certificate</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_uce"></div></div>
+              <label class="form-label">Local Leadership Recommendation Letters (LC1, LC2, LC3, GISO, RDC)</label>
+              <div class="file-upload-box"><input type="file" id="other_docs" name="other_docs" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_other')"><p><strong>Click to upload</strong> Recommendation Letters</p><p>Scanned recommendation letters from local leaders</p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_other"></div></div>
             </div>
             <div class="form-group">
-              <label class="form-label">UACE Certificate / Transcript</label>
-              <div class="file-upload-box"><input type="file" id="uace_certificate" name="uace_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_uace')"><p><strong>UACE Certificate</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_uace"></div></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Degree / Diploma Certificate</label>
-              <div class="file-upload-box"><input type="file" id="degree_certificate" name="degree_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_degree')"><p><strong>Degree/Diploma</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_degree"></div></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Other Supporting Documents</label>
-              <div class="file-upload-box"><input type="file" id="other_docs" name="other_docs" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_other')"><p><strong>Other Documents</strong></p><p>Professional certs, sports awards, etc.</p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_other"></div></div>
+              <label class="form-label">Academic Certificate / Transcript</label>
+              <div class="file-upload-box"><input type="file" id="uce_certificate" name="uce_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_uce')"><p><strong>Academic Certificate</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_uce"></div></div>
             </div>
           </div>
         </div>
