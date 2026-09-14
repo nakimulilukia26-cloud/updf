@@ -1,0 +1,6 @@
+node_modules/
+uploads/tmp/*
+*.log
+.DS_Store
+updf_recruitment.db-journal
+updf_recruitment.db-wal

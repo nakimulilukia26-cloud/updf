@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard | UPDF Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-text"><strong>UPDF RECRUIT</strong><small>Admin Portal</small></div>
+    </div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section">Main</span>
+      <a href="/admin/dashboard" class="active">Dashboard</a>
+      <a href="/admin/applications">Applications</a>
+      <span class="sidebar-section">Reports</span>
+      <a href="/admin/api/export/csv" target="_blank">Export CSV</a>
+      <span class="sidebar-section">Settings</span>
+      <a href="/admin/users">Manage Users</a>
+      <a href="#" onclick="doLogout()">Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none;background:none;border:none;font-size:22px;cursor:pointer" id="sidebarToggle">Menu</button>
+        <h1>Dashboard</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span id="adminName" style="font-size:14px;color:#666"></span>
+        <a href="/" target="_blank" class="btn btn-green btn-sm">View Portal</a>
+        <button onclick="doLogout()" class="btn btn-sm btn-danger">Logout</button>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div class="stats-grid" id="statsGrid">
+        <div class="stat-card total"><div><div class="stat-num" id="st_total">-</div><div class="stat-label">Total Applications</div></div></div>
+        <div class="stat-card submitted"><div><div class="stat-num" id="st_submitted">-</div><div class="stat-label">Submitted</div></div></div>
+        <div class="stat-card shortlisted"><div><div class="stat-num" id="st_shortlisted">-</div><div class="stat-label">Shortlisted</div></div></div>
+        <div class="stat-card accepted"><div><div class="stat-num" id="st_accepted">-</div><div class="stat-label">Accepted</div></div></div>
+        <div class="stat-card rejected"><div><div class="stat-num" id="st_rejected">-</div><div class="stat-label">Rejected</div></div></div>
+        <div class="stat-card general"><div><div class="stat-num" id="st_general">-</div><div class="stat-label">General Recruits</div></div></div>
+        <div class="stat-card professional"><div><div class="stat-num" id="st_professional">-</div><div class="stat-label">Professionals</div></div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px">
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:var(--shadow)">
+          <h3 style="font-size:15px;margin-bottom:16px;color:var(--primary-dark)">Applications by Status</h3>
+          <canvas id="statusChart" height="200"></canvas>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:var(--shadow)">
+          <h3 style="font-size:15px;margin-bottom:16px;color:var(--primary-dark)">Gender Distribution</h3>
+          <canvas id="genderChart" height="200"></canvas>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;margin-bottom:24px">
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:var(--shadow)">
+          <h3 style="font-size:15px;margin-bottom:16px;color:var(--primary-dark)">Top 10 Districts</h3>
+          <canvas id="districtChart" height="250"></canvas>
+        </div>
+        <div style="background:white;border-radius:12px;padding:20px;box-shadow:var(--shadow)">
+          <h3 style="font-size:15px;margin-bottom:16px;color:var(--primary-dark)">Professional Categories</h3>
+          <div id="catList" style="font-size:13px;max-height:250px;overflow-y:auto"></div>
+        </div>
+      </div>
+
+      <div class="admin-table-wrapper">
+        <div style="padding:16px 20px;background:var(--light-grey);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <strong>Recent Applications</strong>
+          <a href="/admin/applications" class="btn btn-green btn-sm">View All</a>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>App No.</th><th>Name</th><th>District</th><th>Category</th><th>Status</th><th>Submitted</th><th>Action</th></tr></thead>
+          <tbody id="recentTable"><tr><td colspan="7" style="text-align:center;padding:30px;color:#666">Loading...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+<script>
+fetch('/auth/me').then(r=>r.json()).then(d=>{
+  if(!d.success){window.location.href='/admin/login';return;}
+  document.getElementById('adminName').textContent = d.admin.username + ' (' + d.admin.role + ')';
+}).catch(()=>window.location.href='/admin/login');
+
+fetch('/admin/api/stats').then(r=>r.json()).then(data=>{
+  if(!data.success)return;
+  const s = data.data;
+  document.getElementById('st_total').textContent=s.total;
+  document.getElementById('st_submitted').textContent=s.submitted;
+  document.getElementById('st_shortlisted').textContent=s.shortlisted;
+  document.getElementById('st_accepted').textContent=s.accepted;
+  document.getElementById('st_rejected').textContent=s.rejected;
+  document.getElementById('st_general').textContent=s.general;
+  document.getElementById('st_professional').textContent=s.professional;
+
+  new Chart(document.getElementById('statusChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Submitted','Under Review','Shortlisted','Accepted','Rejected'],
+      datasets: [{data:[s.submitted,s.under_review,s.shortlisted,s.accepted,s.rejected],
+        backgroundColor:['#6c757d','#17a2b8','#28a745','#155724','#dc3545']}]
+    },
+    options:{plugins:{legend:{position:'right'}}}
+  });
+
+  new Chart(document.getElementById('genderChart'), {
+    type: 'pie',
+    data: {
+      labels: ['Male','Female'],
+      datasets: [{data:[s.male,s.female],backgroundColor:['#006400','#FFD700']}]
+    },
+    options:{plugins:{legend:{position:'right'}}}
+  });
+
+  const dists = s.by_district.slice(0,10);
+  new Chart(document.getElementById('districtChart'), {
+    type: 'bar',
+    data: {
+      labels: dists.map(d=>d.district),
+      datasets: [{label:'Applications',data:dists.map(d=>d.count),backgroundColor:'#006400'}]
+    },
+    options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}
+  });
+
+  const catListEl = document.getElementById('catList');
+  if(s.by_category.length === 0) {
+    catListEl.innerHTML = '<p style="color:#999">No professional applications yet.</p>';
+  } else {
+    catListEl.innerHTML = s.by_category.map(c=>`
+      <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #eee">
+        <span>${c.category}</span><strong>${c.count}</strong>
+      </div>`).join('');
+  }
+
+  const tbody = document.getElementById('recentTable');
+  if(s.recent.length === 0){
+    tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:30px;color:#666">No applications yet.</td></tr>';
+  } else {
+    tbody.innerHTML = s.recent.map(a=>`<tr>
+      <td><code>${a.application_number}</code></td>
+      <td>${a.surname}, ${a.given_names}</td>
+      <td>${a.district_of_origin}</td>
+      <td>${a.recruitment_category}</td>
+      <td><span class="badge ${getBadgeClass(a.status)}">${a.status}</span></td>
+      <td>${new Date(a.submitted_at).toLocaleDateString('en-UG')}</td>
+      <td><a href="/admin/applications" class="btn btn-green btn-sm">View</a></td>
+    </tr>`).join('');
+  }
+});
+
+function getBadgeClass(s){
+  const m={'Submitted':'badge-blue','Shortlisted':'badge-green','Accepted':'badge-green','Rejected':'badge-yellow'};
+  return m[s]||'badge-blue';
+}
+
+function doLogout(){
+  fetch('/auth/logout',{method:'POST'}).then(()=>window.location.href='/admin/login');
+}
+</script>
+</body>
+</html>

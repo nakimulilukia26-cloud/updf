@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applications | UPDF Admin</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="brand-text"><strong>UPDF RECRUIT</strong><small>Admin Portal</small></div></div>
+    <nav class="sidebar-nav">
+      <span class="sidebar-section">Main</span>
+      <a href="/admin/dashboard">Dashboard</a>
+      <a href="/admin/applications" class="active">Applications</a>
+      <span class="sidebar-section">Reports</span>
+      <a href="/admin/api/export/csv" target="_blank">Export All CSV</a>
+      <span class="sidebar-section">Settings</span>
+      <a href="/admin/users">Manage Users</a>
+      <a href="#" onclick="doLogout()">Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1>Applications</h1>
+      <div style="display:flex;gap:10px">
+        <span id="totalCount" style="font-size:14px;color:#666;align-self:center"></span>
+        <a href="/admin/api/export/csv" class="btn btn-green btn-sm" id="exportBtn">Export CSV</a>
+        <button onclick="doLogout()" class="btn btn-sm btn-danger">Logout</button>
+      </div>
+    </div>
+    <div class="admin-content">
+      <div class="admin-table-wrapper">
+        <div class="table-toolbar">
+          <input type="text" class="search-box" id="searchBox" placeholder="Search by name, NIN, app number..." oninput="debounceLoad()">
+          <select id="filterStatus" onchange="loadApps()">
+            <option value="">All Statuses</option>
+            <option>Submitted</option><option>Under Review</option><option>Shortlisted</option>
+            <option>Physical Interview</option><option>Medically Fit</option><option>Medically Unfit</option>
+            <option>Accepted</option><option>Rejected</option>
+          </select>
+          <select id="filterCategory" onchange="loadApps()">
+            <option value="">All Categories</option>
+            <option>General Recruit</option><option>Professional</option>
+          </select>
+          <select id="filterDistrict" onchange="loadApps()">
+            <option value="">All Districts</option>
+          </select>
+          <button onclick="loadApps()" class="btn btn-green btn-sm">Refresh</button>
+        </div>
+        <div style="overflow-x:auto">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)"></th>
+                <th>App No.</th><th>Name</th><th>Gender</th><th>Age</th>
+                <th>District</th><th>Category</th><th>Phone</th>
+                <th>Status</th><th>Submitted</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="appsTable"><tr><td colspan="11" style="text-align:center;padding:40px;color:#666">Loading...</td></tr></tbody>
+          </table>
+        </div>
+        <div id="pagination" style="padding:16px 20px;display:flex;gap:10px;align-items:center;border-top:1px solid var(--border);background:var(--light-grey);flex-wrap:wrap"></div>
+      </div>
+
+      <div id="bulkBar" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--primary-dark);color:white;padding:14px 24px;border-radius:8px;display:flex;gap:12px;align-items:center;box-shadow:0 4px 20px rgba(0,0,0,0.3);z-index:999">
+        <span id="bulkCount">0 selected</span>
+        <select id="bulkStatus" style="padding:6px 12px;border-radius:6px;border:none;font-size:13px">
+          <option value="">Change status to...</option>
+          <option>Under Review</option><option>Shortlisted</option><option>Physical Interview</option>
+          <option>Medically Fit</option><option>Medically Unfit</option><option>Accepted</option><option>Rejected</option>
+        </select>
+        <button onclick="applyBulk()" class="btn btn-sm" style="background:var(--secondary);color:var(--primary-dark)">Apply</button>
+        <button onclick="clearSelection()" class="btn btn-sm" style="background:rgba(255,255,255,0.2);color:white;border-color:rgba(255,255,255,0.3)">Cancel</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-overlay" id="detailModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Application Detail</h3>
+      <button class="modal-close" onclick="document.getElementById('detailModal').classList.remove('show')">X</button>
+    </div>
+    <div class="modal-body" id="detailBody">Loading...</div>
+    <div class="modal-footer">
+      <button onclick="document.getElementById('detailModal').classList.remove('show')" class="btn" style="background:#eee;color:#333;border-color:#ccc">Close</button>
+      <button onclick="window.print()" class="btn" style="background:#eee;color:#333;border-color:#ccc">Print</button>
+      <button onclick="saveStatus()" class="btn btn-green" id="saveStatusBtn">Save Status</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+let currentPage = 1;
+let selectedIds = new Set();
+let currentAppId = null;
+let debounceTimer = null;
+
+fetch('/api/districts').then(r=>r.json()).then(d=>{
+  const sel = document.getElementById('filterDistrict');
+  d.data.forEach(dist=>{
+    const opt=document.createElement('option');
+    opt.value=dist;opt.textContent=dist;
+    sel.appendChild(opt);
+  });
+});
+
+function debounceLoad(){clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>{currentPage=1;loadApps();},400);}
+
+function loadApps(){
+  const search=document.getElementById('searchBox').value.trim();
+  const status=document.getElementById('filterStatus').value;
+  const cat=document.getElementById('filterCategory').value;
+  const dist=document.getElementById('filterDistrict').value;
+  const params=new URLSearchParams({page:currentPage,limit:25});
+  if(search)params.append('search',search);
+  if(status)params.append('status',status);
+  if(cat)params.append('category',cat);
+  if(dist)params.append('district',dist);
+
+  const exportParams=new URLSearchParams();
+  if(status)exportParams.append('status',status);
+  if(dist)exportParams.append('district',dist);
+  document.getElementById('exportBtn').href='/admin/api/export/csv?'+exportParams.toString();
+
+  fetch('/admin/api/applications?'+params.toString())
+    .then(r=>r.json())
+    .then(data=>{
+      if(!data.success)return;
+      document.getElementById('totalCount').textContent=data.total+' total';
+      renderTable(data.data);
+      renderPagination(data.total,data.page,data.limit);
+    });
+}
+
+function renderTable(rows){
+  const tbody=document.getElementById('appsTable');
+  if(rows.length===0){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:40px;color:#666">No applications found.</td></tr>';return;}
+  tbody.innerHTML=rows.map(a=>`<tr>
+    <td><input type="checkbox" value="${a.id}" ${selectedIds.has(String(a.id))?'checked':''} onchange="toggleSelect(this)"></td>
+    <td><code style="font-size:12px">${a.application_number}</code></td>
+    <td><strong>${a.surname}</strong>, ${a.given_names}</td>
+    <td>${a.gender}</td>
+    <td>${a.age||'-'}</td>
+    <td>${a.district_of_origin}</td>
+    <td style="font-size:12px">${a.recruitment_category}${a.professional_category?'<br><em style="color:#666">'+a.professional_category+'</em>':''}</td>
+    <td>${a.phone}</td>
+    <td><span class="badge ${getBadge(a.status)}">${a.status}</span></td>
+    <td style="font-size:12px">${new Date(a.submitted_at).toLocaleDateString('en-UG')}</td>
+    <td><button onclick="viewApp(${a.id})" class="btn btn-green btn-sm">View</button></td>
+  </tr>`).join('');
+}
+
+function renderPagination(total,page,limit){
+  const pages=Math.ceil(total/limit);
+  const el=document.getElementById('pagination');
+  if(pages<=1){el.innerHTML='';return;}
+  let html=`<span style="font-size:13px;color:#666">Page ${page} of ${pages}</span>`;
+  if(page>1)html+=`<button onclick="gotoPage(${page-1})" class="btn btn-sm" style="background:#eee;color:#333">Prev</button>`;
+  const start=Math.max(1,page-2), end=Math.min(pages,page+2);
+  for(let i=start;i<=end;i++){
+    html+=`<button onclick="gotoPage(${i})" class="btn btn-sm" style="background:${i===page?'var(--primary)':'#eee'};color:${i===page?'white':'#333'}">${i}</button>`;
+  }
+  if(page<pages)html+=`<button onclick="gotoPage(${page+1})" class="btn btn-sm" style="background:#eee;color:#333">Next</button>`;
+  el.innerHTML=html;
+}
+
+function gotoPage(p){currentPage=p;loadApps();}
+
+function getBadge(s){
+  const m={'Submitted':'badge-blue','Under Review':'badge-blue','Shortlisted':'badge-green','Accepted':'badge-green'};
+  return m[s]||'badge-yellow';
+}
+
+function viewApp(id){
+  currentAppId=id;
+  document.getElementById('detailModal').classList.add('show');
+  document.getElementById('detailBody').innerHTML='<div style="text-align:center;padding:40px"><div class="loader"></div><p style="margin-top:12px;color:#666">Loading...</p></div>';
+  fetch('/admin/api/applications/'+id).then(r=>r.json()).then(data=>{
+    if(!data.success)return;
+    const a=data.data;
+    document.getElementById('detailBody').innerHTML=renderDetail(a);
+  });
+}
+
+function renderDetail(a){
+  const yesno=v=>v==='Yes'?'<strong style="color:var(--danger)">Yes</strong>':'No';
+  return `
+    <div class="detail-grid">
+      <div class="detail-section-title">Personal Information</div>
+      <div class="detail-item"><div class="detail-label">Application Number</div><div class="detail-value"><code>${a.application_number}</code></div></div>
+      <div class="detail-item"><div class="detail-label">Full Name</div><div class="detail-value">${a.surname}, ${a.given_names}</div></div>
+      <div class="detail-item"><div class="detail-label">National ID</div><div class="detail-value">${a.national_id}</div></div>
+      <div class="detail-item"><div class="detail-label">Date of Birth</div><div class="detail-value">${a.date_of_birth} (Age: ${a.age})</div></div>
+      <div class="detail-item"><div class="detail-label">Gender</div><div class="detail-value">${a.gender}</div></div>
+      <div class="detail-item"><div class="detail-label">Marital Status</div><div class="detail-value">${a.marital_status}</div></div>
+      <div class="detail-item"><div class="detail-label">Religion</div><div class="detail-value">${a.religion||'-'}</div></div>
+
+      <div class="detail-section-title">Contact &amp; Location</div>
+      <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${a.phone}${a.alternate_phone?' / '+a.alternate_phone:''}</div></div>
+      <div class="detail-item"><div class="detail-label">Email</div><div class="detail-value">${a.email||'-'}</div></div>
+      <div class="detail-item"><div class="detail-label">District of Origin</div><div class="detail-value">${a.district_of_origin}</div></div>
+      <div class="detail-item"><div class="detail-label">District of Residence</div><div class="detail-value">${a.district_of_residence}</div></div>
+      <div class="detail-item"><div class="detail-label">Sub-County</div><div class="detail-value">${a.sub_county}</div></div>
+      <div class="detail-item"><div class="detail-label">Parish</div><div class="detail-value">${a.parish}</div></div>
+      <div class="detail-item"><div class="detail-label">Village</div><div class="detail-value">${a.village}</div></div>
+
+      <div class="detail-section-title">Physical Details</div>
+      <div class="detail-item"><div class="detail-label">Height</div><div class="detail-value">${a.height_cm} cm</div></div>
+      <div class="detail-item"><div class="detail-label">Weight</div><div class="detail-value">${a.weight_kg} kg</div></div>
+      <div class="detail-item"><div class="detail-label">Blood Group</div><div class="detail-value">${a.blood_group||'-'}</div></div>
+      <div class="detail-item"><div class="detail-label">Has Disability</div><div class="detail-value">${yesno(a.has_disability)}</div></div>
+      <div class="detail-item"><div class="detail-label">Medical Condition</div><div class="detail-value">${yesno(a.has_medical_condition)}</div></div>
+      <div class="detail-item"><div class="detail-label">Criminal Record</div><div class="detail-value">${yesno(a.has_criminal_record)}</div></div>
+      <div class="detail-item"><div class="detail-label">Prev. Dismissed</div><div class="detail-value">${yesno(a.previously_dismissed)}</div></div>
+
+      <div class="detail-section-title">Category &amp; Education</div>
+      <div class="detail-item"><div class="detail-label">Category</div><div class="detail-value">${a.recruitment_category}${a.professional_category?' - '+a.professional_category:''}</div></div>
+      <div class="detail-item"><div class="detail-label">UCE Grade</div><div class="detail-value">${a.uce_grade||'-'} (${a.uce_year||'-'})</div></div>
+      <div class="detail-item"><div class="detail-label">UACE Grade</div><div class="detail-value">${a.uace_grade||'-'} (${a.uace_year||'-'})</div></div>
+      <div class="detail-item"><div class="detail-label">Higher Education</div><div class="detail-value">${a.higher_edu_qualification||'-'} in ${a.higher_edu_field||'-'}</div></div>
+      <div class="detail-item"><div class="detail-label">Institution</div><div class="detail-value">${a.higher_edu_institution||'-'}</div></div>
+      <div class="detail-item"><div class="detail-label">Work Experience</div><div class="detail-value">${a.years_experience||'0'} years at ${a.current_employer||'-'}</div></div>
+
+      <div class="detail-section-title">Next of Kin</div>
+      <div class="detail-item"><div class="detail-label">Name</div><div class="detail-value">${a.nok_name}</div></div>
+      <div class="detail-item"><div class="detail-label">Relationship</div><div class="detail-value">${a.nok_relationship}</div></div>
+      <div class="detail-item"><div class="detail-label">Phone</div><div class="detail-value">${a.nok_phone}</div></div>
+      <div class="detail-item"><div class="detail-label">Address</div><div class="detail-value">${a.nok_address}</div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px">
+      <div class="form-group">
+        <label class="form-label">Current Status</label>
+        <select class="form-control" id="editStatus">
+          ${['Submitted','Under Review','Shortlisted','Physical Interview','Medically Fit','Medically Unfit','Accepted','Rejected'].map(s=>`<option ${s===a.status?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Reporting Center (if shortlisted)</label>
+        <input type="text" class="form-control" id="editCenter" value="${a.shortlist_center||''}" placeholder="District HQ Name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Interview Date</label>
+        <input type="date" class="form-control" id="editInterviewDate" value="${a.interview_date||''}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Rejection Reason</label>
+        <input type="text" class="form-control" id="editRejectReason" value="${a.rejection_reason||''}" placeholder="Reason for rejection">
+      </div>
+      <div class="form-group" style="grid-column:1/-1">
+        <label class="form-label">Admin Notes</label>
+        <textarea class="form-control" id="editNotes" rows="2">${a.admin_notes||''}</textarea>
+      </div>
+    </div>
+  `;
+}
+
+function saveStatus(){
+  if(!currentAppId) return;
+  const status=document.getElementById('editStatus').value;
+  const admin_notes=document.getElementById('editNotes').value;
+  const shortlist_center=document.getElementById('editCenter').value;
+  const interview_date=document.getElementById('editInterviewDate').value;
+  const rejection_reason=document.getElementById('editRejectReason').value;
+
+  fetch('/admin/api/applications/'+currentAppId+'/status',{
+    method:'PATCH',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({status,admin_notes,shortlist_center,interview_date,rejection_reason})
+  }).then(r=>r.json()).then(data=>{
+    if(data.success){
+      showToast('Status updated successfully!','success');
+      document.getElementById('detailModal').classList.remove('show');
+      loadApps();
+    } else {
+      showToast(data.error||'Error updating status.','error');
+    }
+  });
+}
+
+function toggleSelect(cb){
+  if(cb.checked) selectedIds.add(cb.value); else selectedIds.delete(cb.value);
+  updateBulkBar();
+}
+
+function toggleSelectAll(cb){
+  document.querySelectorAll('#appsTable input[type=checkbox]').forEach(chk=>{
+    chk.checked=cb.checked;
+    if(cb.checked) selectedIds.add(chk.value); else selectedIds.delete(chk.value);
+  });
+  updateBulkBar();
+}
+
+function updateBulkBar(){
+  const bar=document.getElementById('bulkBar');
+  if(selectedIds.size>0){
+    bar.style.display='flex';
+    document.getElementById('bulkCount').textContent=selectedIds.size+' selected';
+  } else {
+    bar.style.display='none';
+  }
+}
+
+function clearSelection(){selectedIds.clear();document.querySelectorAll('input[type=checkbox]').forEach(c=>c.checked=false);updateBulkBar();}
+
+function applyBulk(){
+  const status=document.getElementById('bulkStatus').value;
+  if(!status){showToast('Please select a status.','error');return;}
+  const ids=Array.from(selectedIds).map(Number);
+  fetch('/admin/api/applications/bulk-status',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ids,status})
+  }).then(r=>r.json()).then(data=>{
+    if(data.success){showToast(data.message,'success');clearSelection();loadApps();}
+    else showToast(data.error||'Error','error');
+  });
+}
+
+function doLogout(){fetch('/auth/logout',{method:'POST'}).then(()=>window.location.href='/admin/login');}
+
+function showToast(message,type='info'){
+  const container=document.getElementById('toastContainer');
+  const toast=document.createElement('div');
+  toast.className='toast '+type;
+  toast.innerHTML='<span>'+message+'</span>';
+  container.appendChild(toast);
+  setTimeout(()=>toast.remove(),4000);
+}
+
+loadApps();
+</script>
+</body>
+</html>

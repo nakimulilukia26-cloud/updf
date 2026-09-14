@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Official UPDF Recruitment Portal - Uganda Peoples Defence Forces Online Application System">
+  <title>UPDF Recruitment Portal | Uganda Peoples Defence Forces</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-brand">
+      <div class="logo-text">
+        <strong>UPDF RECRUITMENT</strong>
+        <small>Uganda Peoples Defence Forces</small>
+      </div>
+    </a>
+    <button class="navbar-toggle" onclick="toggleMenu()" aria-label="Toggle menu">Menu</button>
+    <ul class="navbar-menu" id="navMenu">
+      <li><a href="/" class="active">Home</a></li>
+      <li><a href="/check-status">Check Status</a></li>
+      <li><a href="/application-form" class="btn-apply-nav">Apply Now</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>UPDF Recruitment Portal</h1>
+    <h2>Uganda Peoples Defence Forces - Online Application System</h2>
+    <p>Apply online for General Recruit and Professional positions in the Uganda Peoples Defence Forces. Applications are free of charge.</p>
+    <div class="hero-badges">
+      <span class="hero-badge">Free to Apply</span>
+      <span class="hero-badge">Secure Online Portal</span>
+      <span class="hero-badge">Ugandan Citizens Only</span>
+      <span class="hero-badge">Mobile Friendly</span>
+    </div>
+    <div class="btn-hero">
+      <a href="/application-form" class="btn btn-primary btn-lg">Apply Now</a>
+      <a href="/check-status" class="btn btn-outline btn-lg">Check Application Status</a>
+    </div>
+  </div>
+</section>
+
+<!-- Active Cycle Notice -->
+<div style="background:#006400; color:white; text-align:center; padding:14px 20px;" id="cycleNotice">
+  <span id="cycleInfo">Loading recruitment information...</span>
+</div>
+
+<!-- About Section -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2>Who Can Apply?</h2>
+      <div class="section-divider"></div>
+      <p>The UPDF recruits qualified Ugandan citizens in two main categories</p>
+    </div>
+    <div class="cards-grid">
+      <div class="card">
+        <h3>General Recruits</h3>
+        <p>Ugandan citizens aged <strong>18-25 years</strong> with at minimum a Uganda Certificate of Education (UCE/O-Level). Must be physically fit and have a clean criminal record.</p>
+      </div>
+      <div class="card">
+        <h3>Professionals</h3>
+        <p>Qualified professionals in ICT, Medicine, Engineering, Law, Education, Aviation, and more. Degree, Diploma, or relevant certification required depending on category.</p>
+      </div>
+      <div class="card">
+        <h3>Sports Personnel</h3>
+        <p>Talented athletes and sports persons with proven track records at national or international level. Must demonstrate excellence in their chosen sporting discipline.</p>
+      </div>
+      <div class="card">
+        <h3>Musicians / Band</h3>
+        <p>Skilled musicians, band specialists, and live performance artists who can contribute to UPDF cultural and ceremonial activities.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How to Apply Steps -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Application Process</h2>
+      <div class="section-divider"></div>
+      <p>Complete your application in simple steps</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Check Eligibility</h3>
+          <p>Ensure you meet all requirements: Ugandan citizenship, valid National ID, age bracket, academic qualifications, and physical fitness criteria.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Gather Your Documents</h3>
+          <p>Prepare digital copies of your National ID, passport-size photograph, UCE/UACE certificates, and any professional qualifications.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Complete Online Form</h3>
+          <p>Fill out the online application form accurately. Provide personal details, education background, physical attributes, and upload required documents.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Save Your Application Number</h3>
+          <p>After submitting, you will receive a unique application number. Keep this safe - you will use it to check your application status.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h3>Check Shortlist</h3>
+          <p>Shortlists are published on this portal. Check your status regularly using your application number. Shortlisted candidates will be notified with venue and date.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h3>Physical Recruitment & Medical</h3>
+          <p>If shortlisted, report to the assigned recruitment center with original documents, local leader recommendation letters, National ID, and passport photos.</p>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center; margin-top:40px;">
+      <a href="/application-form" class="btn btn-primary btn-lg">Start Application Now</a>
+    </div>
+  </div>
+</section>
+
+<!-- Sleek Footer -->
+<footer>
+  <div class="container">
+    <small>&copy; <span id="footerYear"></span> Uganda Peoples Defence Forces.</small>
+  </div>
+</footer>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+  document.getElementById("footerYear").textContent = new Date().getFullYear();
+  function toggleMenu() { document.getElementById("navMenu").classList.toggle("open"); }
+  fetch("/api/cycle")
+    .then(r => r.json())
+    .then(data => {
+      const el = document.getElementById("cycleInfo");
+      if (data.success && data.data) {
+        const c = data.data;
+        const close = new Date(c.applications_close).toLocaleDateString("en-UG", { year: "numeric", month: "long", day: "numeric" });
+        el.innerHTML = `<strong>${c.cycle_name}</strong> - Applications close: <strong>${close}</strong>`;
+      } else {
+        el.innerHTML = "UPDF Recruitment Portal";
+      }
+    })
+    .catch(() => {
+      document.getElementById("cycleInfo").textContent = "UPDF Recruitment Portal";
+    });
+</script>
+</body>
+</html>

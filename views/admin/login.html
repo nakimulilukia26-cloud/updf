@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login | UPDF Recruitment</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="admin-login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <h2>UPDF Recruitment</h2>
+      <p>Admin Portal - Authorised Access Only</p>
+    </div>
+    <div id="loginError" class="alert-banner alert-danger" style="display:none; margin-bottom:16px">
+      <div id="loginErrorMsg">Invalid credentials.</div>
+    </div>
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="adminEmail" placeholder="admin@updf.go.ug">
+    </div>
+    <div class="form-group" style="margin-bottom:24px">
+      <label class="form-label">Password</label>
+      <div style="position:relative; display:flex; align-items:center;">
+        <input type="password" class="form-control" id="adminPass" placeholder="Password" style="padding-right:70px;" onkeypress="if(event.key==='Enter')doLogin()">
+        <button type="button" id="togglePassBtn" onclick="togglePasswordVisibility()" style="position:absolute; right:10px; background:#eee; border:1px solid #ccc; border-radius:4px; padding:4px 8px; cursor:pointer; font-size:12px; color:#333;">Show</button>
+      </div>
+    </div>
+    <button class="btn btn-green" style="width:100%" id="loginBtn" onclick="doLogin()">Login to Admin Portal</button>
+    <div style="text-align:center;margin-top:20px">
+      <a href="/" style="font-size:13px;color:#666">Back to Public Portal</a>
+    </div>
+    <div style="margin-top:24px;padding:12px;background:#f8f9fa;border-radius:8px;font-size:12px;color:#666;text-align:center">
+      <strong>Authorised Personnel Only</strong><br>
+      Unauthorised access is a criminal offence under the laws of Uganda.
+    </div>
+  </div>
+</div>
+<script>
+function togglePasswordVisibility() {
+  const passInput = document.getElementById('adminPass');
+  const btn = document.getElementById('togglePassBtn');
+  if (passInput.type === 'password') {
+    passInput.type = 'text';
+    btn.textContent = 'Hide';
+  } else {
+    passInput.type = 'password';
+    btn.textContent = 'Show';
+  }
+}
+function doLogin() {
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPass').value;
+  if (!email || !pass) { showErr('Email and password required.'); return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Logging in...';
+  fetch('/auth/login', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({email, password: pass})
+  }).then(r => r.json()).then(data => {
+    btn.disabled = false; btn.textContent = 'Login to Admin Portal';
+    if (data.success) { window.location.href = '/admin/dashboard'; }
+    else { showErr(data.error || 'Invalid credentials.'); }
+  }).catch(() => { btn.disabled = false; btn.textContent = 'Login to Admin Portal'; showErr('Connection error. Try again.'); });
+}
+function showErr(msg) {
+  document.getElementById('loginErrorMsg').textContent = msg;
+  document.getElementById('loginError').style.display = 'flex';
+}
+</script>
+</body>
+</html>

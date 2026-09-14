@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Check Application Status | UPDF Recruitment Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-brand"><div class="logo-text"><strong>UPDF RECRUITMENT</strong><small>Uganda Peoples Defence Forces</small></div></a>
+    <button class="navbar-toggle" onclick="document.getElementById('navMenu').classList.toggle('open')">Menu</button>
+    <ul class="navbar-menu" id="navMenu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/check-status" class="active">Check Status</a></li>
+      <li><a href="/application-form" class="btn-apply-nav">Apply Now</a></li>
+    </ul>
+  </div>
+</nav>
+<section class="section">
+  <div class="status-page">
+    <div class="section-header">
+      <h2>Check Application Status</h2>
+      <div class="section-divider"></div>
+      <p>Enter your application number to check your current status</p>
+    </div>
+    <div class="status-card">
+      <div style="padding:24px;border-bottom:1px solid var(--border)">
+        <div class="form-row cols-1">
+          <div class="form-group">
+            <label class="form-label">Application Number</label>
+            <div style="display:flex;gap:10px;">
+              <input type="text" class="form-control" id="appNumInput" placeholder="e.g. UPDF-2026-123456" style="text-transform:uppercase;flex:1">
+              <button class="btn btn-green" onclick="checkStatus()">Check</button>
+            </div>
+            <span class="form-hint">Your application number was given after submission</span>
+          </div>
+        </div>
+      </div>
+      <div class="status-result" id="statusResult" style="display:none">
+        <div id="statusContent"></div>
+      </div>
+      <div id="statusLoading" style="display:none;text-align:center;padding:40px;">
+        <div class="loader"></div>
+        <p style="margin-top:12px;color:#666">Checking your application...</p>
+      </div>
+      <div id="statusError" style="display:none;padding:24px;">
+        <div class="alert-banner alert-danger">
+          <div id="statusErrorMsg">Application not found. Please check your application number and try again.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:24px">
+      <div class="alert-banner">
+        <div>
+          <strong>Lost your application number?</strong> Contact the UPDF Recruitment Secretariat at your nearest District/City Headquarters with your National ID for assistance.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="container">
+    <p><strong>Uganda Peoples Defence Forces - Official Recruitment Portal</strong></p>
+    <small>&copy; <span id="footerYear"></span> Uganda Peoples Defence Forces. All rights reserved.</small>
+  </div>
+</footer>
+<script>
+document.getElementById('footerYear').textContent = new Date().getFullYear();
+document.getElementById('appNumInput').addEventListener('keypress', e => { if(e.key==='Enter') checkStatus(); });
+
+function checkStatus() {
+  const num = document.getElementById('appNumInput').value.trim().toUpperCase();
+  if(!num) { alert('Please enter your application number'); return; }
+  document.getElementById('statusResult').style.display='none';
+  document.getElementById('statusError').style.display='none';
+  document.getElementById('statusLoading').style.display='block';
+  fetch('/apply/status/' + encodeURIComponent(num))
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('statusLoading').style.display='none';
+      if(data.success) {
+        const d = data.data;
+        const statusClass = 'status-' + d.status.replace(/ /g,'-');
+        const submitted = new Date(d.submitted_at).toLocaleDateString('en-UG', {year:'numeric',month:'long',day:'numeric'});
+        document.getElementById('statusContent').innerHTML = `
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+            <div><h3 style="margin:0;font-size:1.2em;">${d.surname}, ${d.given_names}</h3><small style="color:#666">Application No: <strong>${d.application_number}</strong></small></div>
+            <div class="status-badge ${statusClass}">${d.status}</div>
+          </div>
+          <div class="info-grid">
+            <div class="info-item"><div class="info-label">Gender</div><div class="info-value">${d.gender}</div></div>
+            <div class="info-item"><div class="info-label">Category</div><div class="info-value">${d.recruitment_category}${d.professional_category?' - '+d.professional_category:''}</div></div>
+            <div class="info-item"><div class="info-label">District of Origin</div><div class="info-value">${d.district_of_origin}</div></div>
+            <div class="info-item"><div class="info-label">Submitted On</div><div class="info-value">${submitted}</div></div>
+            ${d.shortlist_center?'<div class="info-item"><div class="info-label">Reporting Center</div><div class="info-value"><strong style="color:var(--primary)">'+d.shortlist_center+'</strong></div></div>':''}
+            ${d.interview_date?'<div class="info-item"><div class="info-label">Interview Date</div><div class="info-value"><strong style="color:var(--primary)">'+d.interview_date+'</strong></div></div>':''}
+          </div>
+          ${getStatusMessage(d.status, d)}
+        `;
+        document.getElementById('statusResult').style.display='block';
+      } else {
+        document.getElementById('statusErrorMsg').textContent = data.message || 'Application not found.';
+        document.getElementById('statusError').style.display='block';
+      }
+    })
+    .catch(() => {
+      document.getElementById('statusLoading').style.display='none';
+      document.getElementById('statusErrorMsg').textContent = 'Unable to check status. Please try again later.';
+      document.getElementById('statusError').style.display='block';
+    });
+}
+
+function getStatusMessage(status, d) {
+  const msgs = {
+    'Submitted': '<div class="alert-banner" style="margin-top:16px"><div>Your application has been received and is awaiting review. Check back regularly for updates.</div></div>',
+    'Under Review': '<div class="alert-banner alert-info" style="margin-top:16px"><div>Your application is currently under review by the UPDF recruitment team.</div></div>',
+    'Shortlisted': '<div class="alert-banner alert-success" style="margin-top:16px"><div><strong>Congratulations! You have been shortlisted.</strong>'+(d.shortlist_center?' Report to: <strong>'+d.shortlist_center+'</strong>':'')+(d.interview_date?' on <strong>'+d.interview_date+'</strong>':'')+'.<br>Bring: Original National ID, Academic Certificates, Recommendation Letters (LC1, LC2, LC3, GISO/DISO), and 4 passport photos.</div></div>',
+    'Physical Interview': '<div class="alert-banner" style="margin-top:16px;background:#fff3cd;border-color:#ffc107"><div><strong>Physical &amp; medical interview in progress.</strong> Ensure you are present at the recruitment center.</div></div>',
+    'Medically Fit': '<div class="alert-banner alert-success" style="margin-top:16px"><div><strong>You have been declared medically fit.</strong> Await further instructions from the UPDF.</div></div>',
+    'Medically Unfit': '<div class="alert-banner alert-danger" style="margin-top:16px"><div>Unfortunately, you did not meet the medical requirements at this time.</div></div>',
+    'Accepted': '<div class="alert-banner alert-success" style="margin-top:16px"><div><strong>CONGRATULATIONS! Your application has been ACCEPTED.</strong> You will receive further instructions regarding reporting for training.</div></div>',
+    'Rejected': '<div class="alert-banner alert-danger" style="margin-top:16px"><div>We regret to inform you that your application was not successful at this time. You may apply in the next recruitment exercise.</div></div>',
+  };
+  return msgs[status] || '';
+}
+</script>
+</body>
+</html>

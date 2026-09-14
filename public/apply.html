@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Application | UPDF Recruitment Portal</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="form-page">
+
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a href="/" class="navbar-brand">
+      <div class="logo-text"><strong>UPDF RECRUITMENT</strong><small>Uganda Peoples Defence Forces</small></div>
+    </a>
+    <button class="navbar-toggle" onclick="document.getElementById('navMenu').classList.toggle('open')">Menu</button>
+    <ul class="navbar-menu" id="navMenu">
+      <li><a href="/">Home</a></li>
+      <li><a href="/check-status">Check Status</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="form-header">
+  <h1>UPDF Online Recruitment Application</h1>
+  <p>Complete all sections accurately. Fields marked <span style="color:#ffd700">*</span> are required.</p>
+</div>
+
+<div class="progress-wrapper">
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-step active">Personal</div>
+      <div class="progress-step">Contact</div>
+      <div class="progress-step">Physical</div>
+      <div class="progress-step">Category</div>
+      <div class="progress-step">Education</div>
+      <div class="progress-step">Documents</div>
+      <div class="progress-step">Declaration</div>
+    </div>
+  </div>
+</div>
+
+<div class="form-container">
+  <form id="applyForm" enctype="multipart/form-data" novalidate>
+
+    <!-- STEP 1: Personal Information -->
+    <div class="form-step active" id="step1">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 1: Personal Information</h3></div>
+        <div class="form-card-body">
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Surname (Family Name) <span class="req">*</span></label>
+              <input type="text" class="form-control" id="surname" name="surname" placeholder="e.g. OKELLO" style="text-transform:uppercase" required>
+              <span class="form-error" id="err_surname">Please enter your surname.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Given Names (Other Names) <span class="req">*</span></label>
+              <input type="text" class="form-control" id="given_names" name="given_names" placeholder="e.g. JOHN MICHAEL" style="text-transform:uppercase" required>
+              <span class="form-error" id="err_given_names">Please enter your given names.</span>
+            </div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label class="form-label">Date of Birth <span class="req">*</span></label>
+              <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+              <span class="form-hint" id="ageDisplay"></span>
+              <span class="form-error" id="err_dob">Please enter your date of birth.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gender <span class="req">*</span></label>
+              <select class="form-control" id="gender" name="gender" required>
+                <option value="">-- Select --</option>
+                <option>Male</option><option>Female</option>
+              </select>
+              <span class="form-error" id="err_gender">Please select gender.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Marital Status <span class="req">*</span></label>
+              <select class="form-control" id="marital_status" name="marital_status" required>
+                <option value="">-- Select --</option>
+                <option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Religion</label>
+              <select class="form-control" id="religion" name="religion">
+                <option value="">-- Select --</option>
+                <option>Catholic</option><option>Anglican/Protestant</option><option>Muslim/Islam</option>
+                <option>Seventh Day Adventist</option><option>Pentecostal</option>
+                <option>Orthodox Christian</option><option>Other Christian</option>
+                <option>Other</option><option>Prefer not to say</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">National Identification Number (NIN) <span class="req">*</span></label>
+              <input type="text" class="form-control" id="national_id" name="national_id" placeholder="e.g. CM90012341HBJK" maxlength="20" style="text-transform:uppercase" required>
+              <span class="form-hint" id="ninStatus"></span>
+              <span class="form-error" id="err_nin">Please enter your National ID Number.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Contact & Location -->
+    <div class="form-step" id="step2">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 2: Contact &amp; Location Details</h3></div>
+        <div class="form-card-body">
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Phone Number <span class="req">*</span></label>
+              <input type="tel" class="form-control" id="phone" name="phone" placeholder="0700123456" required>
+              <span class="form-error" id="err_phone">Please enter a valid phone number.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Alternate Phone Number</label>
+              <input type="tel" class="form-control" id="alternate_phone" name="alternate_phone" placeholder="0700123457">
+            </div>
+          </div>
+          <div class="form-row cols-1">
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="email" name="email" placeholder="john.okello@gmail.com">
+              <span class="form-hint">Optional but recommended for notifications</span>
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">District of Origin (Home District) <span class="req">*</span></label>
+              <select class="form-control" id="district_of_origin" name="district_of_origin" required>
+                <option value="">-- Select District --</option>
+              </select>
+              <span class="form-error" id="err_district_origin">Please select your district of origin.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">District of Residence (Current) <span class="req">*</span></label>
+              <select class="form-control" id="district_of_residence" name="district_of_residence" required>
+                <option value="">-- Select District --</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label class="form-label">Sub-County / Division <span class="req">*</span></label>
+              <input type="text" class="form-control" id="sub_county" name="sub_county" placeholder="e.g. Rubaga Division" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Parish / Ward <span class="req">*</span></label>
+              <input type="text" class="form-control" id="parish" name="parish" placeholder="e.g. Namirembe Parish" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Village / Cell <span class="req">*</span></label>
+              <input type="text" class="form-control" id="village" name="village" placeholder="e.g. Katanga Village" required>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="form-card-header"><h3>Next of Kin / Emergency Contact</h3></div>
+        <div class="form-card-body">
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Next of Kin Full Name <span class="req">*</span></label>
+              <input type="text" class="form-control" id="nok_name" name="nok_name" placeholder="Full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Relationship <span class="req">*</span></label>
+              <select class="form-control" id="nok_relationship" name="nok_relationship" required>
+                <option value="">-- Select --</option>
+                <option>Father</option><option>Mother</option><option>Spouse/Wife</option><option>Spouse/Husband</option>
+                <option>Brother</option><option>Sister</option><option>Son</option><option>Daughter</option>
+                <option>Uncle</option><option>Aunt</option><option>Guardian</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Next of Kin Phone <span class="req">*</span></label>
+              <input type="tel" class="form-control" id="nok_phone" name="nok_phone" placeholder="0700123456" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Next of Kin Address <span class="req">*</span></label>
+              <input type="text" class="form-control" id="nok_address" name="nok_address" placeholder="Village, Sub-county, District" required>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Physical Details -->
+    <div class="form-step" id="step3">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 3: Physical Details &amp; Health</h3></div>
+        <div class="form-card-body">
+          <div class="alert-banner" style="margin-bottom:20px;"><div><strong>Note:</strong> Minimum height is 158cm for males and 150cm for females. Final medical examination will be conducted at the recruitment center.</div></div>
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label class="form-label">Height (cm) <span class="req">*</span></label>
+              <input type="number" class="form-control" id="height_cm" name="height_cm" placeholder="e.g. 175" min="140" max="250" required>
+              <span class="form-error" id="err_height">Please enter valid height (140-250 cm).</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight (kg) <span class="req">*</span></label>
+              <input type="number" class="form-control" id="weight_kg" name="weight_kg" placeholder="e.g. 70" min="40" max="200" required>
+              <span class="form-error" id="err_weight">Please enter valid weight.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Chest (cm)</label>
+              <input type="number" class="form-control" id="chest_cm" name="chest_cm" placeholder="e.g. 85" min="60" max="150">
+            </div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label class="form-label">Blood Group</label>
+              <select class="form-control" id="blood_group" name="blood_group">
+                <option value="">Unknown/Select</option>
+                <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+                <option>AB+</option><option>AB-</option><option>O+</option><option>O-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Eye Color</label>
+              <select class="form-control" id="eye_color" name="eye_color">
+                <option value="">Select</option><option>Brown</option><option>Dark Brown</option><option>Black</option><option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hair Color</label>
+              <select class="form-control" id="hair_color" name="hair_color">
+                <option value="">Select</option><option>Black</option><option>Brown</option><option>Grey</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-1">
+            <div class="form-group">
+              <label class="form-label">Distinguishing Marks</label>
+              <input type="text" class="form-control" id="distinguishing_marks" name="distinguishing_marks" placeholder="e.g. Scar on left arm, birthmark on right cheek">
+            </div>
+          </div>
+          <div class="form-row cols-1">
+            <div class="form-group">
+              <label class="form-label">Do you have any physical disability? <span class="req">*</span></label>
+              <div class="radio-group">
+                <label class="radio-option"><input type="radio" name="has_disability" value="No" checked onchange="toggleSection('disabilityDetails',this.value==='Yes')"> No</label>
+                <label class="radio-option"><input type="radio" name="has_disability" value="Yes" onchange="toggleSection('disabilityDetails',this.value==='Yes')"> Yes</label>
+              </div>
+            </div>
+          </div>
+          <div id="disabilityDetails" style="display:none">
+            <div class="form-group"><label class="form-label">Describe the disability</label><textarea class="form-control" id="disability_details" name="disability_details" rows="2"></textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="form-card-header"><h3>Health &amp; Background Declarations</h3></div>
+        <div class="form-card-body">
+          <div class="form-group">
+            <label class="form-label">Chronic medical condition? <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="has_medical_condition" value="No" checked onchange="toggleSection('medicalDetails',this.value==='Yes')"> No</label>
+              <label class="radio-option"><input type="radio" name="has_medical_condition" value="Yes" onchange="toggleSection('medicalDetails',this.value==='Yes')"> Yes</label>
+            </div>
+          </div>
+          <div id="medicalDetails" style="display:none;margin-top:12px">
+            <div class="form-group"><label class="form-label">Describe the condition</label><textarea class="form-control" id="medical_details" name="medical_details" rows="2"></textarea></div>
+          </div>
+          <div class="form-group" style="margin-top:15px">
+            <label class="form-label">Criminal record? <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="has_criminal_record" value="No" checked onchange="toggleSection('criminalDetails',this.value==='Yes')"> No</label>
+              <label class="radio-option"><input type="radio" name="has_criminal_record" value="Yes" onchange="toggleSection('criminalDetails',this.value==='Yes')"> Yes</label>
+            </div>
+          </div>
+          <div id="criminalDetails" style="display:none;margin-top:12px">
+            <div class="form-group"><label class="form-label">Provide details</label><textarea class="form-control" id="criminal_details" name="criminal_details" rows="2"></textarea></div>
+          </div>
+          <div class="form-group" style="margin-top:15px">
+            <label class="form-label">Previously dismissed from UPDF/security organisation? <span class="req">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option"><input type="radio" name="previously_dismissed" value="No" checked> No</label>
+              <label class="radio-option"><input type="radio" name="previously_dismissed" value="Yes"> Yes</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: Recruitment Category -->
+    <div class="form-step" id="step4">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 4: Recruitment Category</h3></div>
+        <div class="form-card-body">
+          <div class="form-group">
+            <label class="form-label">Select Recruitment Category <span class="req">*</span></label>
+            <div class="radio-group" style="flex-direction:column;">
+              <label class="radio-option" style="width:100%">
+                <input type="radio" name="recruitment_category" value="General Recruit" checked onchange="toggleSection('professionalSection',this.value==='Professional')">
+                <div><strong>General Recruit</strong><br><small style="color:#666">O-Level/A-Level qualification. Age 18-25.</small></div>
+              </label>
+              <label class="radio-option" style="width:100%">
+                <input type="radio" name="recruitment_category" value="Professional" onchange="toggleSection('professionalSection',this.value==='Professional')">
+                <div><strong>Professional</strong><br><small style="color:#666">Degree/Diploma holder in a specialized field.</small></div>
+              </label>
+            </div>
+          </div>
+          <div id="professionalSection" style="display:none;margin-top:20px">
+            <div class="form-group">
+              <label class="form-label">Professional Category <span class="req">*</span></label>
+              <select class="form-control" id="professional_category" name="professional_category">
+                <option value="">-- Select --</option>
+                <optgroup label="ICT &amp; Technology">
+                  <option>ICT - Computer Science / Software Engineering</option>
+                  <option>ICT - Information Technology</option>
+                  <option>ICT - Cyber Security</option>
+                  <option>ICT - Telecommunications</option>
+                  <option>ICT - Network Engineering</option>
+                </optgroup>
+                <optgroup label="Engineering">
+                  <option>Engineering - Civil Engineering</option>
+                  <option>Engineering - Electrical Engineering</option>
+                  <option>Engineering - Mechanical Engineering</option>
+                  <option>Engineering - Quantity Surveying</option>
+                  <option>Engineering - Architecture</option>
+                </optgroup>
+                <optgroup label="Health &amp; Medicine">
+                  <option>Medicine - Medical Officer / Doctor</option>
+                  <option>Medicine - Surgeon / Specialist</option>
+                  <option>Medicine - Pharmacist</option>
+                  <option>Medicine - Nurse / Midwife</option>
+                  <option>Medicine - Allied Health / Clinical Officer</option>
+                  <option>Medicine - Biomedical Engineer</option>
+                  <option>Medicine - Dentist</option>
+                  <option>Medicine - Laboratory Technician</option>
+                  <option>Medicine - Physiotherapist</option>
+                  <option>Medicine - Radiographer</option>
+                </optgroup>
+                <optgroup label="Legal">
+                  <option>Law - Advocate (High Court)</option>
+                  <option>Law - State Attorney</option>
+                </optgroup>
+                <optgroup label="Education">
+                  <option>Education - Secondary School Teacher</option>
+                  <option>Education - Primary School Teacher</option>
+                  <option>Education - Technical/Vocational Instructor</option>
+                </optgroup>
+                <optgroup label="Aviation">
+                  <option>Aviation - Pilot (PPL/CPL)</option>
+                  <option>Aviation - Pilot Instructor</option>
+                  <option>Aviation - Aircraft Engineer</option>
+                  <option>Aviation - Air Traffic Controller</option>
+                  <option>Aviation - Meteorologist</option>
+                </optgroup>
+                <optgroup label="Finance &amp; Administration">
+                  <option>Finance - Accountant / CPA</option>
+                  <option>Finance - Auditor</option>
+                  <option>Administration - Human Resources</option>
+                  <option>Administration - Procurement / Supply Chain</option>
+                </optgroup>
+                <optgroup label="Other">
+                  <option>Social Science - Psychology</option>
+                  <option>Sports - Athletics</option>
+                  <option>Sports - Football</option>
+                  <option>Sports - Boxing</option>
+                  <option>Sports - Other Sport</option>
+                  <option>Music - Band / Instrument</option>
+                  <option>Music - Vocalist</option>
+                  <option>Veterinary - Veterinary Officer</option>
+                  <option>Agriculture - Agricultural Officer</option>
+                  <option>Other Professional</option>
+                </optgroup>
+              </select>
+              <span class="form-error" id="err_pro_cat">Please select your professional category.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-card">
+        <div class="form-card-header"><h3>Local Leadership Information</h3></div>
+        <div class="form-card-body">
+          <p style="margin-bottom:16px;color:#666;font-size:14px;">Provide names of local leaders for your recommendation. Signed letters required at physical recruitment.</p>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">LC1 Chairperson Name</label>
+              <input type="text" class="form-control" id="lc1_name" name="lc1_name" placeholder="Village/Cell Chairperson">
+            </div>
+            <div class="form-group">
+              <label class="form-label">LC2 Chairperson Name</label>
+              <input type="text" class="form-control" id="lc2_name" name="lc2_name" placeholder="Parish/Ward Chairperson">
+            </div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label class="form-label">LC3 Chairperson Name</label>
+              <input type="text" class="form-control" id="lc3_name" name="lc3_name" placeholder="Sub-county Chairperson">
+            </div>
+            <div class="form-group">
+              <label class="form-label">GISO / DISO Name</label>
+              <input type="text" class="form-control" id="giso_diso_name" name="giso_diso_name" placeholder="GISO or DISO name">
+            </div>
+            <div class="form-group">
+              <label class="form-label">RDC Name</label>
+              <input type="text" class="form-control" id="rdc_name" name="rdc_name" placeholder="Resident District Commissioner">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 5: Education -->
+    <div class="form-step" id="step5">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 5: Education &amp; Work Experience</h3></div>
+        <div class="form-card-body">
+          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">UCE (O-Level)</h4>
+          <div class="form-row cols-2">
+            <div class="form-group"><label class="form-label">UCE Index Number</label><input type="text" class="form-control" id="uce_index" name="uce_index" placeholder="U0001/001/2015"></div>
+            <div class="form-group"><label class="form-label">Year</label><input type="number" class="form-control" id="uce_year" name="uce_year" placeholder="2015" min="1980" max="2026"></div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group"><label class="form-label">Aggregate Score</label><input type="number" class="form-control" id="uce_aggregate" name="uce_aggregate" placeholder="e.g. 12" min="4" max="36"></div>
+            <div class="form-group"><label class="form-label">Division/Grade</label>
+              <select class="form-control" id="uce_grade" name="uce_grade">
+                <option value="">-- Select --</option><option>Division 1</option><option>Division 2</option><option>Division 3</option><option>Division 4</option><option>Division U</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">School Name</label><input type="text" class="form-control" id="uce_school" name="uce_school" placeholder="Secondary school name"></div>
+          </div>
+          <hr style="margin:24px 0">
+          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">UACE (A-Level)</h4>
+          <div class="form-row cols-2">
+            <div class="form-group"><label class="form-label">UACE Index Number</label><input type="text" class="form-control" id="uace_index" name="uace_index" placeholder="U0001/001/2017"></div>
+            <div class="form-group"><label class="form-label">Year</label><input type="number" class="form-control" id="uace_year" name="uace_year" placeholder="2017" min="1982" max="2026"></div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group"><label class="form-label">Points</label><input type="number" class="form-control" id="uace_points" name="uace_points" placeholder="e.g. 15" min="0" max="25"></div>
+            <div class="form-group"><label class="form-label">Grade</label>
+              <select class="form-control" id="uace_grade" name="uace_grade">
+                <option value="">-- Select --</option><option>Grade A (19-25 pts)</option><option>Grade B (15-18 pts)</option><option>Grade C (13-14 pts)</option><option>Grade D (7-12 pts)</option><option>Grade E (2-6 pts)</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">School Name</label><input type="text" class="form-control" id="uace_school" name="uace_school" placeholder="School/College name"></div>
+          </div>
+          <hr style="margin:24px 0">
+          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">Higher Education (Diploma / Degree / Masters / PhD)</h4>
+          <div class="form-row cols-2">
+            <div class="form-group"><label class="form-label">Institution Name</label><input type="text" class="form-control" id="higher_edu_institution" name="higher_edu_institution" placeholder="e.g. Makerere University"></div>
+            <div class="form-group"><label class="form-label">Qualification</label>
+              <select class="form-control" id="higher_edu_qualification" name="higher_edu_qualification">
+                <option value="">-- Select --</option><option>Certificate</option><option>Diploma</option><option>Bachelor's Degree</option><option>Postgraduate Diploma</option><option>Master's Degree</option><option>PhD / Doctorate</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group"><label class="form-label">Field of Study</label><input type="text" class="form-control" id="higher_edu_field" name="higher_edu_field" placeholder="e.g. Computer Science, Medicine"></div>
+            <div class="form-group"><label class="form-label">Year of Graduation</label><input type="number" class="form-control" id="higher_edu_year" name="higher_edu_year" placeholder="e.g. 2020" min="1990" max="2026"></div>
+          </div>
+          <hr style="margin:24px 0">
+          <h4 style="color:var(--primary-dark);margin-bottom:16px;font-size:15px;border-bottom:2px solid var(--primary);padding-bottom:8px;">Work Experience (if applicable)</h4>
+          <div class="form-row cols-3">
+            <div class="form-group"><label class="form-label">Current / Last Employer</label><input type="text" class="form-control" id="current_employer" name="current_employer" placeholder="Organisation name"></div>
+            <div class="form-group"><label class="form-label">Position / Title</label><input type="text" class="form-control" id="current_position" name="current_position" placeholder="e.g. Software Developer"></div>
+            <div class="form-group"><label class="form-label">Years of Experience</label><input type="number" class="form-control" id="years_experience" name="years_experience" placeholder="e.g. 3" min="0" max="40"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 6: Document Uploads -->
+    <div class="form-step" id="step6">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 6: Document Uploads</h3></div>
+        <div class="form-card-body">
+          <div class="alert-banner" style="margin-bottom:20px;"><div><strong>Instructions:</strong> Upload clear scans/photos. Accepted: JPG, PNG, PDF. Max 5MB per file. Originals required at physical recruitment.</div></div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label class="form-label">Passport Size Photograph <span class="req">*</span></label>
+              <div class="file-upload-box"><input type="file" id="passport_photo" name="passport_photo" accept="image/jpeg,image/png" onchange="showFile(this,'prev_passport')"><p><strong>Click to upload</strong></p><p>Recent color photo, white background</p><p><small>JPG/PNG, max 2MB</small></p><div class="file-preview" id="prev_passport"></div></div>
+              <span class="form-error" id="err_passport">Please upload your passport photo.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">National ID Card <span class="req">*</span></label>
+              <div class="file-upload-box"><input type="file" id="national_id_doc" name="national_id_doc" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_nid')"><p><strong>Click to upload</strong></p><p>Both sides of National ID</p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_nid"></div></div>
+              <span class="form-error" id="err_nid_doc">Please upload your National ID.</span>
+            </div>
+            <div class="form-group">
+              <label class="form-label">UCE Certificate / Transcript</label>
+              <div class="file-upload-box"><input type="file" id="uce_certificate" name="uce_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_uce')"><p><strong>UCE Certificate</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_uce"></div></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">UACE Certificate / Transcript</label>
+              <div class="file-upload-box"><input type="file" id="uace_certificate" name="uace_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_uace')"><p><strong>UACE Certificate</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_uace"></div></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Degree / Diploma Certificate</label>
+              <div class="file-upload-box"><input type="file" id="degree_certificate" name="degree_certificate" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_degree')"><p><strong>Degree/Diploma</strong></p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_degree"></div></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Other Supporting Documents</label>
+              <div class="file-upload-box"><input type="file" id="other_docs" name="other_docs" accept="image/jpeg,image/png,application/pdf" onchange="showFile(this,'prev_other')"><p><strong>Other Documents</strong></p><p>Professional certs, sports awards, etc.</p><p><small>JPG/PNG/PDF, max 5MB</small></p><div class="file-preview" id="prev_other"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 7: Declaration -->
+    <div class="form-step" id="step7">
+      <div class="form-card">
+        <div class="form-card-header"><h3>Step 7: Declaration &amp; Submission</h3></div>
+        <div class="form-card-body">
+          <div id="summarySection" style="margin-bottom:24px;padding:20px;background:var(--light-grey);border-radius:var(--radius);border:1px solid var(--border);">
+            <h4 style="color:var(--primary-dark);margin-bottom:16px;">Application Summary</h4>
+            <div id="summaryContent" style="font-size:14px;line-height:1.8;"></div>
+          </div>
+          <div class="declaration-box">
+            <strong>STATUTORY DECLARATION</strong><br><br>
+            I, the applicant, hereby solemnly declare that:<br><br>
+            1. I am a citizen of Uganda and all information provided is true, accurate, and complete to the best of my knowledge and belief.<br>
+            2. I understand that any false declaration or forged documents is a criminal offence and shall lead to disqualification, arrest, and prosecution.<br>
+            3. I have never been dismissed from any security organisation and have no criminal convictions unless otherwise stated.<br>
+            4. I am physically and medically fit to undergo the military recruitment process.<br>
+            5. I consent to verification of all documents including academic records and criminal background checks.<br>
+            6. I understand shortlisting does not guarantee final selection and the UPDF reserves the right to reject any application.<br>
+            7. I am a resident of the district indicated and have not made any other application in this exercise.
+          </div>
+          <div class="form-group" style="margin-top:16px">
+            <label class="checkbox-option" style="align-items:flex-start;gap:12px;">
+              <input type="checkbox" id="declaration_accepted" name="declaration_accepted" value="1" required style="margin-top:3px;width:20px;height:20px;">
+              <span style="font-size:14px;"><strong>I have read, understood, and accept the above declaration. All information I provided is truthful and accurate.</strong></span>
+            </label>
+            <span class="form-error" id="err_declaration">You must accept the declaration to submit.</span>
+          </div>
+          <div class="alert-banner alert-danger" style="margin-top:16px"><div><strong>Final Warning:</strong> False information or forged documents will result in criminal prosecution.</div></div>
+        </div>
+      </div>
+    </div>
+
+  </form>
+
+  <!-- Navigation Buttons -->
+  <div class="form-nav" id="formNav">
+    <button type="button" class="btn" id="btnPrev" onclick="prevStep()" style="background:#eee;color:#333;border-color:#ccc;" disabled>Previous</button>
+    <span id="stepIndicator" style="font-size:14px;color:#666;font-weight:600;">Step 1 of 7</span>
+    <button type="button" class="btn btn-green" id="btnNext" onclick="nextStep()">Next Step</button>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div class="modal-overlay" id="successModal">
+  <div class="success-box" style="max-width:550px">
+    <h2>Application Submitted!</h2>
+    <p>Your UPDF recruitment application has been successfully submitted. Please save your application number:</p>
+    <div class="app-number-box" id="resultAppNumber">UPDF-2026-XXXXXX</div>
+    <p id="resultName" style="color:#666;margin-bottom:20px;"></p>
+    <div class="alert-banner alert-success" style="text-align:left;margin-bottom:20px;"><div>Keep this number safe. Use it to <a href="/check-status">check your status</a>. Shortlists will be published on this portal.</div></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="/check-status" class="btn btn-green">Check Status</a>
+      <button onclick="window.print()" class="btn" style="background:#eee;color:#333;border-color:#ccc;">Print</button>
+      <a href="/" class="btn" style="background:#eee;color:#333;border-color:#ccc;">Home</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+<script src="/js/apply.js"></script>
+</body>
+</html>
